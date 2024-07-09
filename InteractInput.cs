@@ -6,9 +6,12 @@ public class InteractInput : MonoBehaviour
 {
 
     [SerializeField] TMPro.TextMeshProUGUI textOnScreen;
+    GameObject currentHoveringOverObject;
     
     [HideInInspector]
     public InteractableObject hoveringOverObject;
+    Character hoveringOverCharacter;
+    [SerializeField] UIPoolBar hpBar;
 
 
     void Update()
@@ -31,17 +34,41 @@ public class InteractInput : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit)) // If the ray hits something, verify if its an InteractableObject
         {
-            InteractableObject interactableObject = hit.transform.GetComponent<InteractableObject>();
-            if (interactableObject != null)
+            if (currentHoveringOverObject != hit.transform.gameObject)
             {
-                hoveringOverObject = interactableObject;
-                textOnScreen.text  = hoveringOverObject.objectName;
+                currentHoveringOverObject = hit.transform.gameObject;
+                UpdateInteractableObject(hit);
             }
-            else
-            {
-                hoveringOverObject = null;
-                textOnScreen.text = "";
-            }
+        }
+    }
+
+    private void UpdateInteractableObject(RaycastHit hit)
+    {
+        InteractableObject interactableObject = hit.transform.GetComponent<InteractableObject>();
+        if (interactableObject != null)
+        {
+            hoveringOverObject = interactableObject;
+            hoveringOverCharacter = interactableObject.GetComponent<Character>();
+            textOnScreen.text = hoveringOverObject.objectName;
+        }
+        else
+        {
+            hoveringOverCharacter = null;
+            hoveringOverObject = null;
+            textOnScreen.text = "";
+        }
+        UpdateHPBar();
+    }
+
+    private void UpdateHPBar()
+    {
+        if (hoveringOverCharacter != null)
+        {
+            hpBar.Show(hoveringOverCharacter.lifePool);
+        }
+        else
+        {
+            hpBar.Clear();
         }
     }
 }
