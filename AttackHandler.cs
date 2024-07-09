@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,9 +7,11 @@ public class AttackHandler : MonoBehaviour
 {
     Character character;
     [SerializeField] float attackRange = 1f;
+    [SerializeField] float defaultTimeToAttack = 2f;
+    float attackTimer;  //Time between attacks
     Animator animator;
     CharacterMovement characterMovement;
-    InteractableObject target;
+    Character target;
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
@@ -16,7 +19,7 @@ public class AttackHandler : MonoBehaviour
         character = GetComponent<Character>();
     }
 
-    internal void Attack(InteractableObject target)
+    internal void Attack(Character target)
     {
         this.target = target;
         ProcessAttack();
@@ -24,9 +27,18 @@ public class AttackHandler : MonoBehaviour
 
     private void Update()
     {
+        AttackTimerTick();
         if (target != null)
         {
             ProcessAttack();
+        }
+    }
+
+    private void AttackTimerTick()
+    {
+        if (attackTimer > 0)
+        {
+            attackTimer -= Time.deltaTime;
         }
     }
 
@@ -37,11 +49,14 @@ public class AttackHandler : MonoBehaviour
 
         if (distance < attackRange)
         {
+            if (attackTimer > 0) {return;}
+
+            attackTimer = GetAttackTime();
             characterMovement.Stop();
             animator.SetTrigger("Attack");
             
-            Character targetCharacterToAttack = target.GetComponent<Character>();
-            targetCharacterToAttack.TakeDamage(character.TakeStats(Statistic.Damage).value);
+
+            target.TakeDamage(character.TakeStats(Statistic.Damage).integer_value);
             target = null;
 
 
@@ -51,5 +66,13 @@ public class AttackHandler : MonoBehaviour
             characterMovement.SetDestination(target.transform.position);
 
         }
+    }
+
+    float GetAttackTime()
+    {
+        float attackTime = defaultTimeToAttack;
+        attackTime /= character.TakeStats(Statistic.AttackSpeed).float_value;
+
+        return attackTime;
     }
 }

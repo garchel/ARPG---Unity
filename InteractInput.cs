@@ -6,12 +6,13 @@ public class InteractInput : MonoBehaviour
 {
 
     [SerializeField] TMPro.TextMeshProUGUI textOnScreen;
+    [SerializeField] UIPoolBar hpBar;
     GameObject currentHoveringOverObject;
     
     [HideInInspector]
     public InteractableObject hoveringOverObject;
-    Character hoveringOverCharacter;
-    [SerializeField] UIPoolBar hpBar;
+    [HideInInspector]
+    public Character hoveringOverCharacter;
 
 
     void Update()

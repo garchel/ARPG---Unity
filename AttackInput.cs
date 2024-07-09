@@ -17,9 +17,9 @@ public class AttackInput : MonoBehaviour // Faz a comunicação entre um Input d
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (interactInput.hoveringOverObject != null)
+            if (interactInput.hoveringOverCharacter != null)
             {
-                attackHandler.Attack(interactInput.hoveringOverObject);
+                attackHandler.Attack(interactInput.hoveringOverCharacter);
             }
         }
     }
