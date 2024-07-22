@@ -13,11 +13,22 @@ public class CharacterMovementInput : MonoBehaviour // Faz a comunicação entre
         characterMovement = GetComponent<CharacterMovement>();
     }
 
-    private void Update()
+    public void MoveInput()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (mouseInput != null && characterMovement != null)
         {
             characterMovement.SetDestination(mouseInput.mouseInputPosition);
+        }
+        else
+        {
+            if (mouseInput == null)
+            {
+                Debug.LogError("MouseInput is not assigned.");
+            }
+            if (characterMovement == null)
+            {
+                Debug.LogError("CharacterMovement component not found.");
+            }
         }
     }
 

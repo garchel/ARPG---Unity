@@ -10,7 +10,7 @@ public class MouseInput : MonoBehaviour
 
 
     
-    void Update()
+    public void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); // Create a ray from the camera to the mouse position
         RaycastHit hit; // Create a RaycastHit object to store the information of the object that the ray hits

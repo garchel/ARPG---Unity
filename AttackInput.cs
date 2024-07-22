@@ -13,15 +13,17 @@ public class AttackInput : MonoBehaviour // Faz a comunicação entre um Input d
         attackHandler = GetComponent<AttackHandler>();
     }
 
-    private void Update()
+    public void Attack()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (interactInput.hoveringOverCharacter != null)
         {
-            if (interactInput.hoveringOverCharacter != null)
-            {
-                attackHandler.Attack(interactInput.hoveringOverCharacter);
-            }
+            attackHandler.Attack(interactInput.hoveringOverCharacter);
         }
+    }
+
+    public bool AttackCheck()
+    {
+        return interactInput.hoveringOverCharacter != null;
     }
 
 

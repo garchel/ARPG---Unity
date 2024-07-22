@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,13 +20,6 @@ public class InteractInput : MonoBehaviour
     {
         CheckInteractObject();
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (hoveringOverObject != null)
-            {
-                hoveringOverObject.Interact();
-            }
-        }
     }
 
     private void CheckInteractObject()
@@ -72,4 +66,14 @@ public class InteractInput : MonoBehaviour
             hpBar.Clear();
         }
     }
+
+    internal void Interact()
+    {
+        hoveringOverObject.Interact();
+    }
+    internal bool InteractCheck()
+    {
+        return hoveringOverObject != null;
+    }
+
 }
