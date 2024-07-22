@@ -10,7 +10,8 @@ public enum Statistic
     Life,
     Damage,
     Armor,
-    AttackSpeed
+    AttackSpeed,
+    MoveSpeed
 }
 
 [Serializable]
@@ -52,6 +53,7 @@ public class StatsGroup
         stats.Add(new StatsValue(Statistic.Damage, 25));
         stats.Add(new StatsValue(Statistic.Armor, 5));
         stats.Add(new StatsValue(Statistic.AttackSpeed, 1f));
+        stats.Add(new StatsValue(Statistic.MoveSpeed, 1f));
     }
 
     internal StatsValue Get(Statistic statisticToGet)
@@ -120,6 +122,7 @@ public class Character : MonoBehaviour
     [SerializeField] AttributeGroup attributes;
     [SerializeField] StatsGroup stats;
     public ValuePool  lifePool;
+    public bool isDead;
 
     private void Start()
     {
@@ -136,7 +139,7 @@ public class Character : MonoBehaviour
     {
         damage = ApplyDefence(damage);
         lifePool.currentValue -= damage;
-        Debug.Log("Current HP: " + lifePool.currentValue.ToString() + "/" + lifePool.maxValue.integer_value);
+        //Debug.Log("Current HP: " + lifePool.currentValue.ToString() + "/" + lifePool.maxValue.integer_value);
         CheckDeath();
     }
 
@@ -155,7 +158,7 @@ public class Character : MonoBehaviour
     {
         if (lifePool.currentValue <= 0)
         {
-            Debug.Log("Enemy " + gameObject.name + " died");
+            isDead = true;
         }
     }
 
