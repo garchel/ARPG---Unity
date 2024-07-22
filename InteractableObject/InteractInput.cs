@@ -14,24 +14,17 @@ public class InteractInput : MonoBehaviour
     public InteractableObject hoveringOverObject;
     [HideInInspector]
     public Character hoveringOverCharacter;
-    InteractableObject interactedObject;
-    [SerializeField] float interactRange = 1f;
-    CharacterMovement characterMovement;
+    InteractHandler interactHandler;
 
     private void Awake()
     {
-        characterMovement = GetComponent<CharacterMovement>();
+        interactHandler = GetComponent<InteractHandler>();
     }
 
 
     void Update()
     {
         CheckInteractObject();
-
-        if (interactedObject != null)
-        {
-            ProcessInteract();
-        }
     }
 
     private void CheckInteractObject()
@@ -48,6 +41,12 @@ public class InteractInput : MonoBehaviour
             }
         }
     }
+
+    internal void Interact()
+    {
+        interactHandler.interactedObject = hoveringOverObject;
+    }
+
 
     private void UpdateInteractableObject(RaycastHit hit)
     {
@@ -79,30 +78,14 @@ public class InteractInput : MonoBehaviour
         }
     }
 
-    internal void Interact()
-    {
-        interactedObject = hoveringOverObject;
-    }
-
-    void ProcessInteract()
-    {
-        float distance = Vector3.Distance(transform.position, interactedObject.transform.position);
-
-        if (distance < interactRange)
-        {
-            interactedObject.Interact();
-            characterMovement.Stop();
-
-            interactedObject = null;
-        }
-        else
-        {
-            characterMovement.SetDestination(interactedObject.transform.position);
-        }
-    }
+    
     internal bool InteractCheck()
     {
         return hoveringOverObject != null;
     }
 
+    internal void ResetState()
+    {
+        interactHandler.ResetState();
+    }
 }

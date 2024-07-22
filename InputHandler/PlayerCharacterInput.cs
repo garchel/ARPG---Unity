@@ -37,6 +37,7 @@ public class PlayerCharacterInput : MonoBehaviour
             }
             
             Debug.Log("Move");
+            interactInput.ResetState();
             characterMovementInput.MoveInput();
         }
     }

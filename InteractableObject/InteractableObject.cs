@@ -1,22 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class InteractableObject : MonoBehaviour
 {
-    [SerializeField] string postMessage;
+    public Action<Inventory> interact;
     public string objectName;
 
-    private void Awake()
+    private void Start()
     {
         objectName = gameObject.name;
     }
 
-    public void Interact()
+    public void Interact(Inventory inventory)
     {
-        if (postMessage != "")
-        {
-            GameSceneManager.instance.StartTransition(postMessage);
-        }
+        interact?.Invoke(inventory);
     }
 }
