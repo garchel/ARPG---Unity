@@ -7,12 +7,14 @@ public class UIPanelManager : MonoBehaviour
     [SerializeField] GameObject inventoryPanel;
     [SerializeField] GameObject questsPanel;
     [SerializeField] GameObject statsPanel;
+    [SerializeField] GameObject defeatedPanel;
 
     private void Awake()
     {
         inventoryPanel.SetActive(false);
         questsPanel.SetActive(false);
         statsPanel.SetActive(false);
+        defeatedPanel.SetActive(false);
     }
 
     private void Update()

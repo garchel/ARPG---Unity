@@ -50,7 +50,7 @@ public class StatsGroup
     public void Init()
     {
         stats.Add(new StatsValue(Statistic.Life, 100));
-        stats.Add(new StatsValue(Statistic.Damage, 25));
+        stats.Add(new StatsValue(Statistic.Damage, 30));
         stats.Add(new StatsValue(Statistic.Armor, 5));
         stats.Add(new StatsValue(Statistic.AttackSpeed, 1f));
         stats.Add(new StatsValue(Statistic.MoveSpeed, 1f));
@@ -114,6 +114,10 @@ public class ValuePool
         this.currentValue = maxValue.integer_value;
     }
 
+    internal void FullRestore()
+    {
+        currentValue = maxValue.integer_value;
+    }
 }
 
 
@@ -154,11 +158,18 @@ public class Character : MonoBehaviour
         return damage;
     }
 
+    internal void Restore()
+    {
+        lifePool.FullRestore();
+        isDead = false;
+    }
+
     private void CheckDeath()
     {
         if (lifePool.currentValue <= 0)
         {
             isDead = true;
+            GetComponent<CharacterDefeatHandler>().Defeated();
         }
     }
 
@@ -166,6 +177,8 @@ public class Character : MonoBehaviour
     {
         return stats.Get(statisticToGet);
     }
+
+
 }
 
 
