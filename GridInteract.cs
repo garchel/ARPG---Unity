@@ -24,7 +24,4 @@ public class GridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         inventoryController.selectedItemGrid = null;
     }
-
-
-
 }
