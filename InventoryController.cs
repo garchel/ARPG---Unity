@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class InventoryController : MonoBehaviour
 {
-    [HideInInspector] public ItemGrid selectedItemGrid;
+    [HideInInspector] private ItemGrid selectedItemGrid;
     Vector2Int positionOnGrid;
     InventoryItem selectedItem;
     InventoryItem overlapItem;
@@ -13,19 +13,85 @@ public class InventoryController : MonoBehaviour
     [SerializeField] List<ItemData> itemDatas;
     [SerializeField] GameObject inventoryItemPrefab;
     [SerializeField] Transform targetCanvas;
+    [SerializeField] InventoryHighlight inventoryHighlight;
 
+    InventoryItem itemToHighlight;
+    public ItemGrid SelectedItemGrid
+    {
+        get => selectedItemGrid;
+        set
+        {
+            selectedItemGrid = value;
+            inventoryHighlight.SetParent(value);
+        }
+    }
 
 
     private void Update()
     {
         ProcessMouseInput();
+
+        if (selectedItemGrid == null) { return; }
+        HandleHighlight();
+
         if (Input.GetKeyDown(KeyCode.A))
         {
-            AddRandomItemToInventory();
+            CreateRandomItem();
+        }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            InsertRandomItem();
         }
     }
 
-    private void AddRandomItemToInventory()
+    private void InsertRandomItem()
+    {
+        if (selectedItemGrid == null) { return; }
+
+        CreateRandomItem();
+        InventoryItem itemToInsert = selectedItem;
+        selectedItem = null;
+        InsertItem(itemToInsert);
+    }
+
+    private void InsertItem(InventoryItem itemToInsert)
+    {
+        Vector2Int? posOnGrid = SelectedItemGrid.FindSpaceForObject(itemToInsert);
+
+        if (posOnGrid == null) { return; }
+        selectedItemGrid.PlaceItem(itemToInsert, posOnGrid.Value.x, posOnGrid.Value.y);
+    }
+
+    Vector2Int oldPosition;
+    private void HandleHighlight()
+    {
+        Vector2Int positionOnGrid = GetTileGridPosition();
+        if (oldPosition == positionOnGrid) { return; }
+
+        oldPosition = positionOnGrid;
+        if (selectedItem == null)
+        {
+            itemToHighlight = selectedItemGrid.GetItem(positionOnGrid.x, positionOnGrid.y);
+            if (itemToHighlight != null)
+            {
+                inventoryHighlight.Show(true);
+                inventoryHighlight.SetSize(itemToHighlight);
+                inventoryHighlight.SetPosition(selectedItemGrid, itemToHighlight);
+            }
+            else
+            {
+                inventoryHighlight.Show(false);
+            }
+        }
+        else 
+        {
+            inventoryHighlight.Show(selectedItemGrid.BoundryCheck(positionOnGrid.x, positionOnGrid.y, selectedItem.itemData.sizeWidth, selectedItem.itemData.sizeHeight));
+            inventoryHighlight.SetSize(selectedItem);
+            inventoryHighlight.SetPosition(selectedItemGrid, selectedItem, positionOnGrid.x, positionOnGrid.y);
+        }
+    }
+
+    private void CreateRandomItem()
     {
         GameObject newItemGO = Instantiate(inventoryItemPrefab, targetCanvas);
         

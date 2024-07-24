@@ -61,7 +61,7 @@ public class ItemGrid : MonoBehaviour
         itemRectTransform.localPosition = CalculatePositionOfObjectOnGrid(itemToPlace, x, y);
     }
 
-    private static Vector2 CalculatePositionOfObjectOnGrid(InventoryItem item, int x, int y)
+    public Vector2 CalculatePositionOfObjectOnGrid(InventoryItem item, int x, int y)
     {
         Vector2 positionOnGrid = new Vector2();
 
@@ -151,6 +151,46 @@ public class ItemGrid : MonoBehaviour
                             return false;
                         }
                     }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public InventoryItem GetItem(int x, int y)
+    {
+        return inventoryItemGrid[x, y];
+    }
+
+    public Vector2Int? FindSpaceForObject(InventoryItem itemToInsert)
+    {
+        int height = gridSizeHeight - itemToInsert.itemData.sizeHeight + 1;
+        int width = gridSizeWidth - itemToInsert.itemData.sizeWidth + 1;
+
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                if (CheckAvailableSpace(x, y, itemToInsert.itemData.sizeWidth, itemToInsert.itemData.sizeHeight))
+                {
+                    return new Vector2Int(x, y);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private bool CheckAvailableSpace(int posX, int posY, int sizeWidth, int sizeHeight)
+    {
+        for (int x = 0; x < sizeWidth; x++)
+        {
+            for (int y = 0; y < sizeHeight; y++)
+            {
+                if (inventoryItemGrid[posX + x, posY + y] != null)
+                {
+                    return false;
                 }
             }
         }
